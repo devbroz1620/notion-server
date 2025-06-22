@@ -1,7 +1,7 @@
-NOTION SERVER - QUICK DOCS (v3)
-===============================
+NOTION API SERVER - QUICK DOCS (v4)
+===================================
 
-This server exposes your Notion content as a category-based API for your website frontend, including Money Basics, ETFs, Debts, and Mind Over Money.
+This is a pure API server that exposes your Notion content as REST endpoints for your website frontend.
 
 ---
 
@@ -10,22 +10,17 @@ FOLDER STRUCTURE
 src/
   app/api/money-basics/route.ts                # GET: List all article categories
   app/api/money-basics/category/[cat]/route.ts # GET: Articles for a specific category
-  app/api/money-basics/posts/[id]/route.ts     # GET: Markdown content for a single Money Basics article
+  app/api/money-basics/posts/[id]/route.ts     # GET: Single Money Basics article with content
   app/api/etfs/route.ts                        # GET: List all published ETFs
-  app/api/etfs/[id]/route.ts                   # GET: Markdown content for a single ETF
+  app/api/etfs/[id]/route.ts                   # GET: Single ETF with content
   app/api/debts/route.ts                       # GET: List all published Debts
-  app/api/debts/[id]/route.ts                  # GET: Markdown content for a single Debt
+  app/api/debts/[id]/route.ts                  # GET: Single Debt with content
+  app/api/debts/category/[cat]/route.ts        # GET: Debts for a specific category
   app/api/mind-over-money/route.ts             # GET: List all published Mind Over Money articles
-  app/api/mind-over-money/[id]/route.ts        # GET: Markdown content for a single Mind Over Money article
-  app/money-basics/[id]/page.tsx                # Markdown preview page (uses API or sample)
-  components/markdown-components.tsx             # Custom React components for markdown
-  components/ui/table.tsx, badge.tsx             # UI components (shadcn/ui)
-  lib/utils.ts                                  # Utility (cn function)
-  app/globals.css                               # Tailwind/global styles
-  app/layout.js                                 # Imports globals.css
-
-tailwind.config.js                              # Tailwind config
-postcss.config.mjs                              # PostCSS config
+  app/api/mind-over-money/[id]/route.ts        # GET: Single Mind Over Money article with content
+  app/page.js                                   # Simple API server info page
+  app/layout.js                                 # Basic layout
+  app/globals.css                               # Minimal CSS
 
 ---
 
@@ -42,73 +37,68 @@ API ENDPOINTS
    - [categoryName] uses underscores instead of spaces (e.g., "Budgeting_and_Money_Management").
    - Returns: [{ id, title, category, readingTime, slug, published }, ...]
 
-3. Article Markdown Content:
+3. Single Article with Content:
    GET /api/money-basics/posts/[id]
-   - Returns: { "id": "...", "title": "...", "content": "markdown string..." }
+   - Returns: { id, title, category, readingTime, slug, published, content }
 
 ### ETFs
 1. List all ETFs:
    GET /api/etfs
    - Returns: [{ id, name, description, slug, readingTime, published }, ...]
 
-2. ETF Markdown Content:
+2. Single ETF with Content:
    GET /api/etfs/[id]
-   - Returns: { "id": "...", "name": "...", "content": "markdown string..." }
+   - Returns: { id, name, description, slug, readingTime, published, content }
 
 ### Debts
 1. List all Debts:
    GET /api/debts
    - Returns: [{ id, name, category, slug, readingTime, published }, ...]
 
-2. Debt Markdown Content:
+2. List Debts by Category:
+   GET /api/debts/category/[categoryName]
+   - [categoryName] uses underscores instead of spaces.
+   - Returns: [{ id, name, category, slug, readingTime, published }, ...]
+
+3. Single Debt with Content:
    GET /api/debts/[id]
-   - Returns: { "id": "...", "name": "...", "content": "markdown string..." }
+   - Returns: { id, name, category, slug, readingTime, published, content }
 
 ### Mind Over Money
 1. List all Mind Over Money articles:
    GET /api/mind-over-money
    - Returns: [{ id, name, slug, readingTime, published }, ...]
 
-2. Mind Over Money Markdown Content:
+2. Single Mind Over Money with Content:
    GET /api/mind-over-money/[id]
-   - Returns: { "id": "...", "name": "...", "content": "markdown string..." }
+   - Returns: { id, name, slug, readingTime, published, content }
 
 ---
 
 FRONTEND USAGE
 --------------
-- Fetch categories from `/api/money-basics` (names use underscores for spaces).
-- Fetch articles for a category from `/api/money-basics/category/[categoryName]`.
-- Fetch a single article's markdown from `/api/money-basics/posts/[id]`.
-- Fetch all ETFs, Debts, or Mind Over Money articles from their respective endpoints.
-- Fetch markdown content for any single item from its `[id]` endpoint.
-- Render markdown with `react-markdown` and your custom components.
+- All endpoints return JSON data suitable for frontend consumption.
+- Single-item endpoints ([id]) return both metadata and markdown content.
+- Category endpoints use underscores in URLs for spaces.
+- All endpoints support CORS for cross-origin requests.
 
 ---
 
-TAILWIND CSS
-------------
-- Configured via tailwind.config.js, postcss.config.mjs, and imported in app/globals.css.
-- All UI uses Tailwind utility classes.
+SETUP & ENV VARS
+----------------
+- Run `npm install` and `npm run dev`.
+- Required ENV VARS:
+  - `NOTION_TOKEN`: Notion integration token
+  - `NOTION_DB_ID`: Money Basics DB
+  - `NOTION_ETF_DB_ID`: ETFs DB
+  - `NOTION_DEBT_DB_ID`: Debts DB
+  - `NOTION_MIND_DB_ID`: Mind Over Money DB
 
 ---
 
-SETUP
------
-1. npm install
-2. npm run dev
-3. If styles don't work: check configs, delete node_modules/.next, reinstall, restart.
-
----
-
-ENV VARS
---------
-- NOTION_TOKEN: Notion integration token
-- NOTION_DB_ID: Money Basics DB
-- NOTION_ETF_DB_ID: ETFs DB
-- NOTION_DEBT_DB_ID: Debts DB
-- NOTION_MIND_DB_ID: Mind Over Money DB
-- NEXT_PUBLIC_BASE_URL: (optional) for SSR fetches
+DEPLOYMENT
+----------
+This is a pure API server with minimal dependencies. No UI components or styling frameworks are included.
 
 ---
 
