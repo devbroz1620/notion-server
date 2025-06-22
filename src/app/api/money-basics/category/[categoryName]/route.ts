@@ -11,18 +11,19 @@ const corsHeaders = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { categoryName: string } }
+  { params }: { params: Promise<{ categoryName: string }> }
 ) {
   try {
+    const { categoryName } = await params;
     const databaseId = process.env.NOTION_DB_ID!;
-    const category = decodeURIComponent(params.categoryName).replace(/_/g, ' ');
+    const category = decodeURIComponent(categoryName).replace(/_/g, ' ');
 
     const response = await notion.databases.query({
         database_id: databaseId,
         filter: {
           and: [
             {
-              property: 'Is Published?',
+              property: 'Published',
               checkbox: {
                 equals: true,
               },
@@ -46,7 +47,7 @@ export async function GET(
                   (props.Categories?.multi_select?.map((cat: any) => cat.name).join(", ") || ""),
         readingTime: props["Reading time"]?.rich_text?.[0]?.plain_text || "",
         slug: props.Slug?.rich_text?.[0]?.plain_text || "",
-        published:props["Is Published?"]?.checkbox || false,
+        published: props.Published?.checkbox || false,
       };
     });
 

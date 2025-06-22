@@ -11,9 +11,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const pageId = params.id;
+    const { id: pageId } = await params;
     // Fetch page properties and markdown content concurrently
     const [page, mdBlocks] = await Promise.all([
       notion.pages.retrieve({ page_id: pageId }),

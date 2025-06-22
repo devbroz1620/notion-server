@@ -20,10 +20,10 @@ export async function OPTIONS() {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const pageId = params.id;
+    const { id: pageId } = await params;
     // Fetch page properties and markdown content concurrently
     const [page, mdBlocks] = await Promise.all([
       notion.pages.retrieve({ page_id: pageId }),
@@ -48,10 +48,7 @@ export async function GET(
   } catch (error) {
     return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/json',
-      },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 } 

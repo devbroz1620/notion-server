@@ -9,10 +9,14 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
-export async function GET(request: NextRequest, { params }: { params: { categoryName: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ categoryName: string }> }
+) {
   try {
+    const { categoryName } = await params;
     const databaseId = process.env.NOTION_DEBT_DB_ID!;
-    const category = decodeURIComponent(params.categoryName).replace(/_/g, ' ');
+    const category = decodeURIComponent(categoryName).replace(/_/g, ' ');
     const response = await notion.databases.query({
       database_id: databaseId,
       filter: {
