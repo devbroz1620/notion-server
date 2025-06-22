@@ -23,7 +23,7 @@ export async function GET(
         filter: {
           and: [
             {
-              property: 'Published',
+              property: 'Is Published?',
               checkbox: {
                 equals: true,
               },
@@ -47,7 +47,7 @@ export async function GET(
                   (props.Categories?.multi_select?.map((cat: any) => cat.name).join(", ") || ""),
         readingTime: props["Reading time"]?.rich_text?.[0]?.plain_text || "",
         slug: props.Slug?.rich_text?.[0]?.plain_text || "",
-        published: props.Published?.checkbox || false,
+        published: props["Is Published?"]?.checkbox || false,
       };
     });
 

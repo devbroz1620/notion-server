@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     const databaseId = process.env.NOTION_DB_ID!;
     const db = await notion.databases.retrieve({ database_id: databaseId });
     const categoryProperty = db.properties.Categories as any;
-    
+    console.log(databaseId, db , categoryProperty)
     let categories: string[] = [];
     if (categoryProperty?.type === 'select') {
       categories = categoryProperty.select.options.map((opt: any) => opt.name.replace(/ /g, '_'));
