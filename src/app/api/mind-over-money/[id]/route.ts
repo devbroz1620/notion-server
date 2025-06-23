@@ -31,6 +31,7 @@ export async function GET(
       readingTime: props["Reading Time"]?.rich_text?.[0]?.plain_text || "",
       published: props["Is Published"]?.checkbox || false,
       content: contentString,
+      description : props.Description?.rich_text?.[0]?.plain_text || "",
     };
     return new Response(JSON.stringify(mind), {
       status: 200,
