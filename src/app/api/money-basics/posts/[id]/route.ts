@@ -40,6 +40,7 @@ export async function GET(
       slug: props.Slug?.rich_text?.[0]?.plain_text || "",
       published: props["Is Published?"]?.checkbox || false,
       content: contentString,
+      description : props.Description?.rich_text?.[0]?.plain_text || "",
     };
     return new Response(JSON.stringify(article), {
       status: 200,
