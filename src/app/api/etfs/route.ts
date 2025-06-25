@@ -28,6 +28,7 @@ export async function GET() {
         slug: props.Slug?.rich_text?.[0]?.plain_text || "",
         readingTime: props["Reading Time"]?.rich_text?.[0]?.plain_text || "",
         published: props["Is published?"]?.checkbox || false,
+        tags : props.Tags?.select?.name || "",
       };
     });
 

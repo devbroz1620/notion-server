@@ -32,6 +32,7 @@ export async function GET(
       readingTime: props["Reading Time"]?.rich_text?.[0]?.plain_text || "",
       published: props["Is Published?"]?.checkbox || false,
       content: contentString,
+      tags : props.Tags?.select?.name || "",
     };
     return new Response(JSON.stringify(etf), {
       status: 200,
